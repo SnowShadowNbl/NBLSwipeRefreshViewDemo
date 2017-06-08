@@ -1,11 +1,16 @@
 apply plugin: 'com.android.library'
 
-android {
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
 
-    resourcePrefix "nbl_"
+version = "1.0.1"
+
+android {
 
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
+
+    resourcePrefix ""
 
     defaultConfig {
         minSdkVersion 21
@@ -22,26 +27,34 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
-// 然后你可以拷贝下面这一大段 修改注释的地方
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    testCompile 'junit:junit:4.12'
+}
 
-version = "1.0.1"// 区分library版本
-
-def siteUrl = 'https://github.com/SnowShadowNbl/NBLSwipeRefreshViewDemo'   // 项目的主页 github地址
-def gitUrl = 'https://github.com/SnowShadowNbl/NBLSwipeRefreshViewDemo.git'   // Git仓库的url
-group = "com.nbl.nblswiperefreshview"            // Maven Group ID for the artifact，一般填你唯一的包名
+def siteUrl = 'https://github.com/SnowShadowNbl/NBLSwipeRefreshViewDemo'
+def gitUrl = 'https://github.com/SnowShadowNbl/NBLSwipeRefreshViewDemo.git'
+group = "com.nbl.library"
 install {
     repositories.mavenInstaller {
+
         pom {
             project {
                 packaging 'aar'
-                //项目的描述
-                name 'NBLSwipeRefreshView'
+                // Add your description here
+                description 'NBLSwipeRefreshViewDemo'
+                name 'NBLSwipeRefreshViewDemo'
                 url siteUrl
-                // 许可证说明
+
                 licenses {
                     license {
                         name 'The Apache Software License, Version 2.0'
@@ -49,9 +62,8 @@ install {
                     }
                 }
                 developers {
-                    //开发者的基本信息，根据自己喜好填上就是
                     developer {
-                        id 'nabeili'
+                        id 'nbl'
                         name 'nbl'
                         email 'vsnowshadow@gmail.com'
                     }
@@ -70,11 +82,10 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    options.linkSource true
-    classpath += project.files(project.android.getBootClasspath().join(File.pathSeparator))
-    failOnError false
+    options.encoding = 'UTF-8'
+    source = 'src/main/java'
 }
+
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
@@ -84,26 +95,19 @@ artifacts {
     archives sourcesJar
 }
 Properties properties = new Properties()
+
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 bintray {
     user = properties.getProperty("bintray.user")
     key = properties.getProperty("bintray.apikey")
     configurations = ['archives']
     pkg {
-        repo = "maven"
-        name = "NBLSwipeRefreshView"    //发布到JCenter上的项目名字
+        userOrg = "nbl"
+        repo = "maven"  //发布到Bintray的那个仓库里，默认账户有四个库，我们这里上传到maven库
+        name = "nblswiperefreshview"  //发布到Bintray上的项目名字
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]
         publish = true
     }
-}
-
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    testCompile 'junit:junit:4.12'
 }
