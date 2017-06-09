@@ -2,6 +2,7 @@
 支持下拉刷新和上拉加载更多，支持自定义FooterView，支持ListView嵌套滚动。
 
 -------------------
+[ ![Download](https://api.bintray.com/packages/nbl/maven/nblswiperefreshview/images/download.svg) ](https://bintray.com/nbl/maven/nblswiperefreshview/_latestVersion)
 ## 依赖
   ``` javaScript
    compile 'com.nbl.library:nblswiperefreshview:1.0.1'
