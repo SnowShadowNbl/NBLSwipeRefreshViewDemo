@@ -68,7 +68,7 @@
 
  ``` xml
 
- The MIT License (MIT)
+ The [MIT](https://opensource.org/licenses/MIT) License ([MIT](https://opensource.org/licenses/MIT))
 
  Copyright (c) 2017 Nbl
 
